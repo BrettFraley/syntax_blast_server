@@ -1,0 +1,29 @@
+<.header>
+  Level <%= @level.id %>
+  <:subtitle>This is a level record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/levels/#{@level}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit level</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Author"><%= @level.author %></:item>
+  <:item title="Total wins"><%= @level.total_wins %></:item>
+  <:item title="Total losses"><%= @level.total_losses %></:item>
+  <:item title="Level json"><%= @level.level_json %></:item>
+</.list>
+
+<.back navigate={~p"/levels"}>Back to levels</.back>
+
+<.modal :if={@live_action == :edit} id="level-modal" show on_cancel={JS.patch(~p"/levels/#{@level}")}>
+  <.live_component
+    module={SyntaxBlastServerWeb.LevelLive.FormComponent}
+    id={@level.id}
+    title={@page_title}
+    action={@live_action}
+    level={@level}
+    patch={~p"/levels/#{@level}"}
+  />
+</.modal>

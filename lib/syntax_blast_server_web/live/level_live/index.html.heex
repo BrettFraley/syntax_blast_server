@@ -1,0 +1,44 @@
+<.header>
+  Listing Levels
+  <:actions>
+    <.link patch={~p"/levels/new"}>
+      <.button>New Level</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="levels"
+  rows={@streams.levels}
+  row_click={fn {_id, level} -> JS.navigate(~p"/levels/#{level}") end}
+>
+  <:col :let={{_id, level}} label="Author"><%= level.author %></:col>
+  <:col :let={{_id, level}} label="Total wins"><%= level.total_wins %></:col>
+  <:col :let={{_id, level}} label="Total losses"><%= level.total_losses %></:col>
+  <:col :let={{_id, level}} label="Level json"><%= level.level_json %></:col>
+  <:action :let={{_id, level}}>
+    <div class="sr-only">
+      <.link navigate={~p"/levels/#{level}"}>Show</.link>
+    </div>
+    <.link patch={~p"/levels/#{level}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, level}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: level.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="level-modal" show on_cancel={JS.patch(~p"/levels")}>
+  <.live_component
+    module={SyntaxBlastServerWeb.LevelLive.FormComponent}
+    id={@level.id || :new}
+    title={@page_title}
+    action={@live_action}
+    level={@level}
+    patch={~p"/levels"}
+  />
+</.modal>

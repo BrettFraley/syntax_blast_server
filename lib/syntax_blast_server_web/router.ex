@@ -18,6 +18,13 @@ defmodule SyntaxBlastServerWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    # CRUD Admin Routes for Levels table
+    live "/levels", LevelLive.Index, :index
+    live "/levels/new", LevelLive.Index, :new
+    live "/levels/:id/edit", LevelLive.Index, :edit
+    live "/levels/:id", LevelLive.Show, :show
+    live "/levels/:id/show/edit", LevelLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
